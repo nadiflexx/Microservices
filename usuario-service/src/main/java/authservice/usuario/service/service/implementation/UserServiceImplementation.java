@@ -24,14 +24,14 @@ public class UserServiceImplementation implements UserService {
     private UserRepository repository;
 
     public Optional<User> getAllCars(String userId) {
-        List<Car> carsList = restTemplate.getForObject("http://localhost:8082/car/user/" + userId, List.class);
+        List<Car> carsList = restTemplate.getForObject("http://car-service/car/user/" + userId, List.class);
         Optional<User> user = getUserById(userId);
         user.ifPresent(value -> value.setCarsList(carsList));
         return user;
     }
 
     public Optional<User> getAllMotos(String userId) {
-        List<Motorcycle> motoList = restTemplate.getForObject("http://localhost:8083/moto/user/" + userId, List.class);
+        List<Motorcycle> motoList = restTemplate.getForObject("http://motorcycle-service/moto/user/" + userId, List.class);
         Optional<User> user = getUserById(userId);
         user.ifPresent(value -> value.setMotoList(motoList));
         return user;
@@ -47,6 +47,10 @@ public class UserServiceImplementation implements UserService {
     public List<User> getAllUsers() {
         List<User> users = repository.findAll();
         if (users.isEmpty()) throw new DataNotFoundException("No users found");
+        for (User user: users) {
+            getAllCars(user.getId());
+            getAllMotos(user.getId());
+        }
         return repository.findAll();
     }
 
