@@ -3,6 +3,7 @@ package authservice.usuario.service.service.implementation;
 import authservice.usuario.service.entity.User;
 import authservice.usuario.service.exceptions.DataNotFoundException;
 import authservice.usuario.service.models.Car;
+import authservice.usuario.service.models.Motorcycle;
 import authservice.usuario.service.repository.UserRepository;
 import authservice.usuario.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,25 @@ import java.util.UUID;
 @Service
 public class UserServiceImplementation implements UserService {
 
-//    @Autowired
-//    private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private UserRepository repository;
 
-//    public List<Car> getAllCars(String userId) {
-//        return restTemplate.getForObject("http://localhost:8082/user" + userId, List.class);
-//    }
+    public Optional<User> getAllCars(String userId) {
+        List<Car> carsList = restTemplate.getForObject("http://localhost:8082/car/user/" + userId, List.class);
+        Optional<User> user = getUserById(userId);
+        user.ifPresent(value -> value.setCarsList(carsList));
+        return user;
+    }
+
+    public Optional<User> getAllMotos(String userId) {
+        List<Motorcycle> motoList = restTemplate.getForObject("http://localhost:8083/moto/user/" + userId, List.class);
+        Optional<User> user = getUserById(userId);
+        user.ifPresent(value -> value.setMotoList(motoList));
+        return user;
+    }
 
     @Override
     public User saveUser(User user) {

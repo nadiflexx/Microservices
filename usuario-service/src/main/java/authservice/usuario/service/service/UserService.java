@@ -15,4 +15,9 @@ public interface UserService {
     User updateUser(User user);
 
     void deleteUser(String id);
+
+    Optional<User> getAllCars(String id);
+
+    Optional<User> getAllMotos(String id);
+
 }

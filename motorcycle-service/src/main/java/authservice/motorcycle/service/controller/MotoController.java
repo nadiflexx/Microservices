@@ -27,6 +27,11 @@ public class MotoController {
         return ResponseEntity.ok(service.getAllMotos());
     }
 
+    @GetMapping("/user/{id}")
+    public List<Moto> getAllCarsByUser(@PathVariable String id) {
+        return service.findByUserId(id);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Moto> getMotoById(@PathVariable String id) {
         return service.getMotoById(id)
