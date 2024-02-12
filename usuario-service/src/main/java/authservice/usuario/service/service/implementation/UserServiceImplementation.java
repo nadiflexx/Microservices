@@ -2,6 +2,7 @@ package authservice.usuario.service.service.implementation;
 
 import authservice.usuario.service.entity.User;
 import authservice.usuario.service.exceptions.DataNotFoundException;
+import authservice.usuario.service.external.services.MotorcycleService;
 import authservice.usuario.service.models.Car;
 import authservice.usuario.service.models.Motorcycle;
 import authservice.usuario.service.repository.UserRepository;
@@ -22,6 +23,8 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private MotorcycleService motoService;
 
     public Optional<User> getAllCars(String userId) {
         List<Car> carsList = restTemplate.getForObject("http://car-service/car/user/" + userId, List.class);
@@ -31,7 +34,8 @@ public class UserServiceImplementation implements UserService {
     }
 
     public Optional<User> getAllMotos(String userId) {
-        List<Motorcycle> motoList = restTemplate.getForObject("http://motorcycle-service/moto/user/" + userId, List.class);
+        //List<Motorcycle> motoList = restTemplate.getForObject("http://motorcycle-service/moto/user/" + userId, List.class);
+        List<Motorcycle> motoList = motoService.getMotosByUserId(userId);
         Optional<User> user = getUserById(userId);
         user.ifPresent(value -> value.setMotoList(motoList));
         return user;
