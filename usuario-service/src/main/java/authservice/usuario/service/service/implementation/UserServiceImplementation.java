@@ -51,7 +51,7 @@ public class UserServiceImplementation implements UserService {
     public List<User> getAllUsers() {
         List<User> users = repository.findAll();
         if (users.isEmpty()) throw new DataNotFoundException("No users found");
-        for (User user: users) {
+        for (User user : users) {
             getAllCars(user.getId());
             getAllMotos(user.getId());
         }

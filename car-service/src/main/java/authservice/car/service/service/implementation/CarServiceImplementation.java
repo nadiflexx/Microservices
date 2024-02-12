@@ -46,6 +46,8 @@ public class CarServiceImplementation implements CarService {
 
     @Override
     public List<Car> findByUserId(String userId) {
-        return repository.findCarByUserId(userId);
+        List<Car> cars = repository.findCarByUserId(userId);
+        if (cars.isEmpty()) throw new DataNotFoundException("No cars found");
+        return cars;
     }
 }

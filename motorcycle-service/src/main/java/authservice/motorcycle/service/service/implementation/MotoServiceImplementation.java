@@ -33,7 +33,7 @@ public class MotoServiceImplementation implements MotoService {
 
     @Override
     public Optional<Moto> getMotoById(String id) {
-        return Optional.of(repository.findById(id).orElseThrow(() -> new DataNotFoundException("User not found " + id)));
+        return Optional.of(repository.findById(id).orElseThrow(() -> new DataNotFoundException("Moto not found " + id)));
     }
 
     @Override
@@ -43,12 +43,13 @@ public class MotoServiceImplementation implements MotoService {
 
     @Override
     public void deleteMoto(String id) {
-        repository.findById(id).orElseThrow(() -> new DataNotFoundException("User not found " + id));
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Moto not found " + id));
         repository.deleteById(id);
     }
 
-    @Override
     public List<Moto> findByUserId(String userId) {
-        return repository.findByUserId(userId);
+        List<Moto> motos = repository.findByUserId(userId);
+        if (motos.isEmpty()) throw new DataNotFoundException("No motos found");
+        return motos;
     }
 }
