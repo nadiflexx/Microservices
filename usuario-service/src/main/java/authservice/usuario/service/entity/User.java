@@ -5,16 +5,18 @@ import javax.persistence.*;
 
 import authservice.usuario.service.models.Car;
 import authservice.usuario.service.models.Motorcycle;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Builder
 @Table(name = "user")
 public class User {
 

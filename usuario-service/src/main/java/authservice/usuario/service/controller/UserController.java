@@ -2,6 +2,7 @@ package authservice.usuario.service.controller;
 
 import authservice.usuario.service.entity.User;
 import authservice.usuario.service.service.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class UserController {
     }
 
     @GetMapping
+    @CircuitBreaker(name = "getAllUsersBreaker", fallbackMethod = "getAllUsersFallback")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(service.getAllUsers());
     }
@@ -57,12 +59,44 @@ public class UserController {
     }
 
     @GetMapping("/cars/{id}")
+    @CircuitBreaker(name = "getAllUsersCarsBreaker", fallbackMethod = "getAllUsersCarsFallback")
     public ResponseEntity<Optional<User>> getAllUsersCars(@PathVariable String id) {
         return ResponseEntity.ok(service.getAllCars(id));
     }
 
     @GetMapping("/motos/{id}")
+    @CircuitBreaker(name = "getAllUsersMotoBreaker", fallbackMethod = "getAllUsersMotoFallback")
     public ResponseEntity<Optional<User>> getAllUsersMoto(@PathVariable String id) {
         return ResponseEntity.ok(service.getAllMotos(id));
+    }
+
+    public ResponseEntity<User> getAllUsersCarsFallback(String id, Exception exception) {
+        User user = User.builder()
+                .email("root@gmail.com")
+                .nombre("root")
+                .apellido("Usuario por defecto tras error")
+                .id("1234")
+                .build();
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    public ResponseEntity<User> getAllUsersMotoFallback(String id, Exception exception) {
+        User user = User.builder()
+                .email("root@gmail.com")
+                .nombre("root")
+                .apellido("Usuario por defecto tras error")
+                .id("1234")
+                .build();
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    public ResponseEntity<User> getAllUsersFallback(Exception exception) {
+        User user = User.builder()
+                .email("root@gmail.com")
+                .nombre("root")
+                .apellido("Usuario por defecto tras error")
+                .id("1234")
+                .build();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
